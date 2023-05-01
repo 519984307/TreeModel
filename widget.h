@@ -7,6 +7,7 @@
 #include <QPushButton>
 
 #include "treemodel.h"
+#include "treemodeldelegate.h"
 
 class Widget : public QWidget
 {
@@ -16,6 +17,7 @@ public:
     Widget(QWidget *parent = 0);
 
     TreeModel _treeModel {this};
+    TreeModelDelegate _treeModelDelegate {this};
     QTreeView _treeView;
     QGridLayout _mainGridLayout {this};
     QPushButton _pbClose {"Закрыть"};

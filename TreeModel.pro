@@ -27,9 +27,12 @@ SOURCES += \
         main.cpp \
         widget.cpp \
     treemodel.cpp \
-    treeitem.cpp
+    treeitem.cpp \
+    treemodeldelegate.cpp
 
 HEADERS += \
         widget.h \
     treemodel.h \
-    treeitem.h
+    treeitem.h \
+    treemodeltypes.h \
+    treemodeldelegate.h

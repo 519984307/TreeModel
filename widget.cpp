@@ -1,10 +1,27 @@
 #include "widget.h"
 
+#include <QHeaderView>
+
+using namespace TreeItemTypes;
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
-    this->setGeometry(width(),height(),300,800);
+    TreeItem *rootItem = new TreeItem();
+    TreeItem *child1 = new TreeItem(rootItem,"Идентификатор объекта", "Object-1", TypeValue::LineEdit, false);
+    TreeItem *child2 = new TreeItem(child1,"Средство связи", "mr-231", TypeValue::LineEdit, false);
+    TreeItem *child3 = new TreeItem(child2,"Параметр SpinBox", 0, TypeValue::SpinBox);
+    TreeItem *child4 = new TreeItem(child2,"Параметр DoubleSpinBox", 0.0, TypeValue::DoubleSpinBox);
+    TreeItem *child5 = new TreeItem(child2,"Параметр СomboBox", "", TypeValue::ComboBox);
+    TreeItem *child6 = new TreeItem(child2,"Параметр LineEdit");
+
+    _treeModel.setColumns(QStringList() << "Параметр" << "Значение");
+    _treeModel.setRoot(QSharedPointer<TreeItem>(rootItem));
+    _treeView.header()->resizeSections(QHeaderView::ResizeToContents);
+
     _treeView.setModel(&_treeModel);
+    _treeView.setItemDelegate(&_treeModelDelegate);
+    this->resize(800,800);
 
     _mainGridLayout.addWidget(&_treeView);
     _mainGridLayout.addWidget(&_pbClose);
@@ -12,29 +29,9 @@ Widget::Widget(QWidget *parent)
     connect(&_pbClose,&QPushButton::clicked,
             this,&Widget::close);
 
-    TreeItem *rootItem = new TreeItem();
-    TreeItem *child1 = new TreeItem(rootItem);
-    TreeItem *child2 = new TreeItem(child1);
-    TreeItem *child3 = new TreeItem(child1);
-    TreeItem *child4 = new TreeItem(child1);
-    TreeItem *child5 = new TreeItem(child1);
-
-    child1->setParam("child1");
-    child1->setValue("111");
-
-    child2->setParam("child2");
-    child2->setValue("222");
-
-    child3->setParam("child3");
-    child3->setValue("333");
-
-    child4->setParam("child4");
-    child4->setValue("444");
-
-    child5->setParam("child5");
-    child5->setValue("555");
-
-    _treeModel.setColumns(QStringList() << "Параметр" << "Значение");
-    _treeModel.setRoot(QSharedPointer<TreeItem>(rootItem));
+    Q_UNUSED(child3)
+    Q_UNUSED(child4)
+    Q_UNUSED(child5)
+    Q_UNUSED(child6)
 }
 

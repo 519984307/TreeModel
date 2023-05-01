@@ -1,6 +1,7 @@
 #include "treemodel.h"
 
 #include <QDebug>
+#include <QColor>
 
 TreeModel::TreeModel(QObject *parent)
     : QAbstractItemModel(parent), _rootItem(QSharedPointer<TreeItem>(new TreeItem))
@@ -79,7 +80,12 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
     if(index.column() != 0)
-        flags |= Qt::ItemIsEditable;
+    {
+        if(treeItemByIndex(index)->isEditable())
+        {
+            flags |= Qt::ItemIsEditable;
+        }
+    }
     return flags;
 }
 
