@@ -49,6 +49,3 @@ void TreeItem::setIsEditable(bool isEditable)
 }
 
 
-
-
-

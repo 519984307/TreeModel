@@ -1,12 +1,12 @@
 #ifndef TREEMODELDELEGATE_H
 #define TREEMODELDELEGATE_H
 
-#include <QItemDelegate>
+#include <QStyledItemDelegate>
 
 #include <treeitem.h>
 #include <treemodeltypes.h>
 
-class TreeModelDelegate : public QItemDelegate
+class TreeModelDelegate : public QStyledItemDelegate
 {
 public:
     TreeModelDelegate(QObject *parent = nullptr);
@@ -33,9 +33,6 @@ public:
 
 protected:
     TreeItem *treeItemByIndex(const QModelIndex &index) const;
-
-
-
 };
 
 #endif // TREEMODELDELEGATE_H

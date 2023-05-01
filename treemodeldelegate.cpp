@@ -4,21 +4,46 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QDoubleSpinBox>
-
+#include <QPainter>
 
 using namespace TreeItemTypes;
 
-TreeModelDelegate::TreeModelDelegate(QObject *parent) : QItemDelegate(parent)
-{
-
-}
+TreeModelDelegate::TreeModelDelegate(QObject *parent) : QStyledItemDelegate(parent) {}
 
 /*!
  * \brief TreeModelDelegate::paint - Отрисовывает ячейку элемента
  */
 void TreeModelDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QItemDelegate::paint(painter,option,index);
+    painter->save();
+    if(treeItemByIndex(index)->children().size() == 0)
+    {
+        int row = index.row();
+        if(row % 2 == 0)
+        {
+            painter->fillRect(option.rect,QColor(255,255,191));
+        }
+        else
+        {
+            painter->fillRect(option.rect,QColor(255,242,222));
+        }
+
+    }
+    else
+    {
+        painter->fillRect(option.rect,Qt::gray);
+    }
+    // Рисуем вертикальную границу
+    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
+    painter->drawLine(option.rect.bottomRight(), option.rect.topRight());
+
+    // Рисуем горизонтальную границу
+    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
+    painter->drawLine(option.rect.bottomLeft(), option.rect.bottomRight());
+    painter->restore();
+
+    // Вызываем стандартную отрисовку
+    QStyledItemDelegate::paint(painter, option, index);
 }
 
 /*!
@@ -136,8 +161,9 @@ void TreeModelDelegate::updateEditorGeometry(QWidget *editor, const QStyleOption
  */
 QSize TreeModelDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    QSize size = QItemDelegate::sizeHint(option,index);
-    size.setHeight(size.height() + 7);
+    QSize size = QStyledItemDelegate::sizeHint(option,index);
+    size.setHeight(size.height() + 1);
+    size.setWidth(size.width() + 1);
     return size;
 }
 

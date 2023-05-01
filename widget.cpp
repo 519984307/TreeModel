@@ -1,6 +1,7 @@
 #include "widget.h"
 
 #include <QHeaderView>
+#include <QDebug>
 
 using namespace TreeItemTypes;
 
