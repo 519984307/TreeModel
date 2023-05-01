@@ -8,8 +8,8 @@ Widget::Widget(QWidget *parent)
     : QWidget(parent)
 {
     TreeItem *rootItem = new TreeItem();
-    TreeItem *child1 = new TreeItem(rootItem,"Идентификатор объекта", "Object-1", TypeValue::LineEdit, false);
-    TreeItem *child2 = new TreeItem(child1,"Средство связи", "mr-231", TypeValue::LineEdit, false);
+    TreeItem *child1 = new TreeItem(rootItem,"RootChild", "Object-1", TypeValue::LineEdit, false);
+    TreeItem *child2 = new TreeItem(child1,"SS", "proverka", TypeValue::LineEdit, false);
     TreeItem *child3 = new TreeItem(child2,"Параметр SpinBox", 0, TypeValue::SpinBox);
     TreeItem *child4 = new TreeItem(child2,"Параметр DoubleSpinBox", 0.0, TypeValue::DoubleSpinBox);
     TreeItem *child5 = new TreeItem(child2,"Параметр СomboBox", "", TypeValue::ComboBox);
