@@ -31,8 +31,11 @@ public:
     //!Возвращает размер, необходимый делегату для отображения элемента
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
+    bool editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index);
+
 protected:
     TreeItem *treeItemByIndex(const QModelIndex &index) const;
+
 };
 
 #endif // TREEMODELDELEGATE_H

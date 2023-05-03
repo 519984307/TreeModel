@@ -5,6 +5,9 @@
 #include <QSpinBox>
 #include <QDoubleSpinBox>
 #include <QPainter>
+#include <QApplication>
+#include <QMouseEvent>
+#include <QDebug>
 
 using namespace TreeItemTypes;
 
@@ -15,35 +18,26 @@ TreeModelDelegate::TreeModelDelegate(QObject *parent) : QStyledItemDelegate(pare
  */
 void TreeModelDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    painter->save();
-    if(treeItemByIndex(index)->children().size() == 0)
-    {
-        int row = index.row();
-        if(row % 2 == 0)
-        {
-            painter->fillRect(option.rect,QColor(255,255,191));
-        }
-        else
-        {
-            painter->fillRect(option.rect,QColor(255,242,222));
-        }
+    QStyleOptionViewItem opt = option;
+    initStyleOption(&opt, index);
 
+    if(index.column() == 0 || index.parent().isValid()) {
+        QStyledItemDelegate::paint(painter, opt, index);
+        return;
     }
-    else
-    {
-        painter->fillRect(option.rect,Qt::gray);
-    }
-    // Рисуем вертикальную границу
-    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
-    painter->drawLine(option.rect.bottomRight(), option.rect.topRight());
 
-    // Рисуем горизонтальную границу
-    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine));
-    painter->drawLine(option.rect.bottomLeft(), option.rect.bottomRight());
-    painter->restore();
 
-    // Вызываем стандартную отрисовку
-    QStyledItemDelegate::paint(painter, option, index);
+    const QWidget *widget = opt.widget;
+    QStyle *style = widget ? widget->style() : QApplication::style();
+    QStyleOptionButton button;
+    button.rect = QRect(opt.rect.right() - 20, opt.rect.top(), 20, opt.rect.height());
+    button.text = "+";
+    button.state |= QStyle::State_Enabled;
+
+    style->drawControl(QStyle::CE_PushButton, &button, painter);
+
+    opt.rect = QRect(opt.rect.left(), opt.rect.top(), opt.rect.width() - 20, opt.rect.height());
+    QStyledItemDelegate::paint(painter, opt, index);
 }
 
 /*!
@@ -165,6 +159,20 @@ QSize TreeModelDelegate::sizeHint(const QStyleOptionViewItem &option, const QMod
     size.setHeight(size.height() + 1);
     size.setWidth(size.width() + 1);
     return size;
+}
+
+bool TreeModelDelegate::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index)
+{
+    if(index.column() == 0 || index.parent().isValid()) {
+        return false;
+    }
+    if (event->type() == QEvent::MouseButtonPress) {
+        const QRect buttonRect = QRect(option.rect.right() - 20, option.rect.top(), 20, option.rect.height());
+        if (static_cast<QMouseEvent*>(event)->button() == Qt::LeftButton && buttonRect.contains(static_cast<QMouseEvent*>(event)->pos())) {
+            qDebug() << Q_FUNC_INFO;
+            return true;
+        }
+    }
 }
 
 TreeItem *TreeModelDelegate::treeItemByIndex(const QModelIndex &index) const
