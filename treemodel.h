@@ -13,7 +13,7 @@ public:
     TreeModel(QObject *parent = nullptr);
     void setRoot(const QSharedPointer<TreeItem> &rootItem);
     void setColumns(const QStringList &columns);
-
+    void addItem(TreeItem *item, const QModelIndex &indexParent);
     // QAbstractItemModel interface
 public:
     QModelIndex index(int row, int column, const QModelIndex &parent) const;
@@ -24,6 +24,8 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role);
     Qt::ItemFlags flags(const QModelIndex &index) const;
+    void addSS();
+
 
 protected:
      QSharedPointer<TreeItem> _rootItem;

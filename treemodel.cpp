@@ -6,6 +6,7 @@
 TreeModel::TreeModel(QObject *parent)
     : QAbstractItemModel(parent), _rootItem(QSharedPointer<TreeItem>(new TreeItem))
 {
+    _rootItem->setParam("rootItem");
 
 }
 
@@ -88,6 +89,29 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
     }
     return flags;
 }
+
+void TreeModel::addSS()
+{
+    QModelIndex rootIndex = QModelIndex();//индекс рутового элемента!
+
+    if(this->rowCount(rootIndex) > 0) {// Корневой элемент имеет потомков
+        for (int row = 0; row < this->rowCount(rootIndex); ++row) {
+            QModelIndex childIndex = this->index(row,0,rootIndex);
+            TreeItem *childItem = treeItemByIndex(childIndex);
+            if(childItem->param() == "1") {
+                this->addItem(new TreeItem(nullptr,"child"),childIndex);
+            }
+        }
+    }
+}
+
+void TreeModel::addItem(TreeItem *item, const QModelIndex &indexParent)
+{
+    beginInsertRows(indexParent, rowCount(indexParent),rowCount(indexParent));
+    item->setParent(treeItemByIndex(indexParent));
+    endInsertRows();
+}
+
 
 void TreeModel::setRoot(const QSharedPointer<TreeItem> &rootItem)
 {

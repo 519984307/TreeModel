@@ -5,6 +5,7 @@
 #include <QGridLayout>
 #include <QTreeView>
 #include <QPushButton>
+#include <QLineEdit>
 
 #include "treemodel.h"
 #include "treemodeldelegate.h"
